@@ -1,0 +1,319 @@
+Decision tree:
+                                    ------> ID3 (for the id3 we have more than 2 splits)
+                                   |
+      decision tree classifier ----
+                                   |
+                                    ------> CART  (for cart we have only 2 splits )
+
+
+   a) entropy and gini index ---> to find out the purity split
+   b) information gain --->  to select the best feature for decision tree construction
+
+   **NOTE**
+        Entropy and Gini Index are used to measure how good or bad a split is in a Decision Tree.
+
+
+. pure split --->if all the values present yes means it is pure split.(it is the leaf node also)  (0 means pure)
+
+. impure split --> if it consist of both yes and no it is impure split.  (1 is impure)
+
+1. to check the purity of split there is a 2 methods 
+     1.entropy (FOR SMALL DATA WE WILL USE THE ENTROPY)
+     2.gini index (FOR LARGE DATA WE WILL USE THE GINI INDEX)
+
+what feature you need for splitting --> information gain
+
+2. What feature should you select for splitting?
+   → Choose the feature with the highest **Information Gain**.
+
+(Binary Classification)
+
+Classes:
+
+* 0
+* 1
+
+### 1) Entropy
+
+[ H(S) = -P_{+}\log_{2}(P_{+}) - P_{-}\log_{2}(P_{-}) ]
+
+### 2) Gini Impurity
+
+[ GI = 1 - \sum_{i=1}^{n} (P_i)^2 ]
+
+Where:
+
+* (P_{+}) = probability of positive class
+* (P_{-}) = probability of negative class
+* (P_i) = probability of class (i)
+
+ -------------------------------------------------------------------------------------
+
+                     f1  (6 Yes / 3 No)
+                           ●
+                         /   \
+                        /     \
+                       /       \
+                      /         \
+             Impure Split      Pure Split
+                  ↓                 ↓
+
+           C1 (3Y / 3N)       C2 (3Y / 0N)
+                 ●                  ●
+
+
+
+Entropy of C1:
+
+H(C1) = - P+ log2(P+) - P- log2(P-)
+
+      = - (3/6) log2(3/6) - (3/6) log2(3/6)
+
+      = 1 → Impure Split
+
+Entropy of C2:
+
+H(C2) = - (3/3) log2(3/3) - 0 log2(0)
+
+      = -1 × log2(1)
+
+      = 0 → Pure Split
+
+
+**note**
+ the entropy should be consist in between the 0 and 1.
+
+
+-----------------------------------------------------------------------------------------
+
+
+H(S)
+ ↑
+1.0 ┤                    Entropy
+    ┤                       /\
+    ┤                      /  \
+0.5 ┤        Gini         /    \
+    ┤         /\         /      \
+    ┤        /  \       /        \
+0.0 └───────/────\─────/──────────\────→ p+/p-
+          0      0.5               1
+
+
+
+ 2) Gini Impurity(GI)
+
+GI = 1 - Σ(Pi)^2
+        i=1→n
+
+
+For C1 (3Y / 3N):
+
+GI = 1 - ((P+)² + (P-)²)
+
+   = 1 - ((1/2)² + (1/2)²)
+
+   = 1 - (1/4 + 1/4)
+
+   = 1 - 1/2
+
+   = 0.5 → Impure Split
+
+
+For C2 (3Y / 0N):
+
+GI = 1 - ((3/3)²)
+
+   = 1 - 1
+
+   = 0 → Pure Split
+
+---------------------------------------------------------------------------------------------
+
+**Information Gain**
+
+Gain(S, f1) = H(S) - Σ (|Sv| / |S|) H(Sv)
+                         v ∈ Values
+
+
+Where:
+- H(S)     → Entropy of the root node
+- Sv       → Subset after split
+- |Sv|     → Number of samples in subset
+- |S|      → Total number of samples
+
+
+Root Node:
+
+Total = 14
+= 9 Yes / 5 No
+
+
+Entropy of Root Node:
+
+H(S) = - P+ log2(P+) - P- log2(P-)
+
+     = - (9/14) log2(9/14)- (5/14) log2(5/14) = 0.94
+
+
+
+Split using feature f1:
+
+                 f1
+                  ●
+                /   \
+               /     \
+             C1       C2
+
+        C1 = 6Y / 2N   → 8 samples
+        C2 = 3Y / 3N   → 6 samples
+
+                         ↓
+                   Impure Split
+
+
+
+Entropy of C1:
+
+H(C1) = - (6/8) log2(6/8)- (2/8) log2(2/8) = 0.81
+
+Entropy of C2:
+
+
+C2 = 3Y / 3N
+
+H(C2) = - (3/6) log2(3/6)- (3/6) log2(3/6)
+
+      = - (1/2) log2(1/2)- (1/2) log2(1/2) = 1
+
+      = 1
+
+
+
+INFORMATION GAIN CALCULATION:
+
+Gain(S, f1)
+
+= 0.94 - [ (8/14 × 0.81) + (6/14 × 1) ]
+
+= 0.94 - [ 0.462 + 0.428 ]
+
+= 0.94 - 0.89
+
+= 0.05
+
+
+              f2   ✓
+               ●
+             /   \
+            /     \
+          C3       C4
+          ●         ●
+
+
+Entropy of C3:
+
+Assume:
+C3 = 7Y / 1N
+
+H(C3) = - (7/8) log2(7/8)- (1/8) log2(1/8)
+
+      ≈ 0.54
+
+
+
+Entropy of C4:
+
+Assume:
+C4 = 2Y / 4N
+
+H(C4) = - (2/6) log2(2/6)- (4/6) log2(4/6)
+
+      ≈ 0.91
+
+
+Gain(S, f2) = 0.051
+
+Gain(S, f1) = 0.049
+
+
+Gain(S, f2) > Gain(S, f1)
+
+
+Therefore:
+Choose feature f2 for splitting.
+
+Information Gain basically measures how much uncertainty is reduced after splitting the dataset.
+
+----------------------------------------------------------------------------------------------
+Entropy vs Gini Impurity
+----------------------------------------------------------------------------------------------
+
+
+Entropy:
+
+H(S) = - P+ log2(P+) - P- log2(P-)
+
+
+
+Gini Impurity:
+
+GI = 1 - Σ(Pi)²
+        i=1→n
+
+
+
+Example:
+Output = 3 Categories
+
+
+Entropy for Multi-class Classification:
+
+H(S) =
+- Pc1 log2(Pc1)
+- Pc2 log2(Pc2)
+- Pc3 log2(Pc3)
+
+
+Notes:
+
+• Entropy is more computationally expensive because of logarithmic calculations.
+
+• Gini Impurity is computationally faster.
+
+• Small datasets   → Entropy
+• Large datasets   → Gini Impurity
+
+
+**Post-Pruning**
+────────────────────────────
+
+Post-pruning means:
+
+First, grow the complete decision tree.
+
+Then, based on hyperparameters(by using max_depth),
+remove (cut) the unnecessary branches that do not
+improve the model.
+
+Goal:
+Reduce overfitting and improve generalization.
+
+
+**Pre-Pruning**
+────────────────────────────
+
+Pre-pruning means:
+
+While the decision tree is growing,
+it stops or cuts the unnecessary branches early
+based on hyperparameters or stopping conditions.
+
+Examples:
+• Maximum depth
+• Minimum samples split
+• Minimum information gain
+
+Goal:
+Prevent overfitting during tree construction.
+
+
